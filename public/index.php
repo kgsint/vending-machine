@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\HomeController;
+use App\Controllers\AuthController;
 use Core\Router;
 
 session_start();
@@ -18,6 +19,8 @@ $router = new Router();
 // register routes
 $router->get("/", [HomeController::class, "index"]);
 $router->get("/home", [HomeController::class, "index"]);
+$router->get("/login", [AuthController::class, "loginView"]);
+$router->post("/logout", [AuthController::class, "logout"]);
 
 $uri = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH); // only uri without query strings or parameters
 $requestMethod = isset($_POST["_method"])
