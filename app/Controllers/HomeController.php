@@ -2,10 +2,12 @@
 
 namespace App\Controllers;
 
+use Core\View;
+
 class HomeController
 {
     public function index()
     {
-        require_once VIEW_PATH . "home.view.php";
+        View::make("home", ["foo" => "bar"]);
     }
 }
