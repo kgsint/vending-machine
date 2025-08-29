@@ -4,6 +4,8 @@ use App\Controllers\HomeController;
 use App\Controllers\AuthController;
 use App\Controllers\ProductsController;
 use App\Controllers\AdminController;
+use App\Controllers\Api\ProductsApiController;
+use App\Controllers\Api\AuthApiController;
 use Core\Router;
 use App\Exceptions\ValidationException;
 use Core\Session;
@@ -57,6 +59,26 @@ $router->post("/admin/users/store", [AdminController::class, "storeUser"]);
 $router->get("/admin/users/edit", [AdminController::class, "editUser"]);
 $router->post("/admin/users/update", [AdminController::class, "updateUser"]);
 $router->post("/admin/users/delete", [AdminController::class, "deleteUser"]);
+
+// ===== API ROUTES =====
+
+// API Authentication routes
+$router->post("/api/auth/login", [AuthApiController::class, "login"]);
+$router->post("/api/auth/logout", [AuthApiController::class, "logout"]);
+$router->post("/api/auth/register", [AuthApiController::class, "register"]);
+$router->post("/api/auth/refresh", [AuthApiController::class, "refresh"]);
+$router->get("/api/auth/me", [AuthApiController::class, "me"]);
+
+// API Product routes
+$router->get("/api/products", [ProductsApiController::class, "index"]);
+$router->get("/api/products/show", [ProductsApiController::class, "show"]);
+$router->post("/api/products", [ProductsApiController::class, "store"]);
+$router->put("/api/products/update", [ProductsApiController::class, "update"]);
+$router->delete("/api/products/delete", [ProductsApiController::class, "delete"]);
+$router->post("/api/products/purchase", [ProductsApiController::class, "purchase"]);
+
+// API Transaction routes
+$router->get("/api/users/transactions", [ProductsApiController::class, "userTransactions"]);
 
 $uri = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH); // only uri without query strings or parameters
 $requestMethod = isset($_POST["_method"])

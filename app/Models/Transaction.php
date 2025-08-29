@@ -290,27 +290,33 @@ class Transaction
         int $productId,
         int $quantity,
     ): array {
+        // Validate input parameters
+        if ($userId <= 0 || $productId <= 0 || $quantity <= 0) {
+            throw new \Exception("Invalid purchase data");
+        }
+
         try {
             // Start transaction
             $this->db->beginTransaction();
 
             // Get product details
             $productQuery =
-                "SELECT * FROM products WHERE id = :id AND is_active = 1 FOR UPDATE";
+                "SELECT * FROM products WHERE id = :id FOR UPDATE";
             $stmt = $this->db->prepare($productQuery);
             $stmt->bindParam(":id", $productId, PDO::PARAM_INT);
             $stmt->execute();
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$product) {
-                throw new \Exception("Product not found or inactive");
+                throw new \Exception("Product not found");
+            }
+
+            if (!$product["is_active"]) {
+                throw new \Exception("Product not available");
             }
 
             if ($product["quantity_available"] < $quantity) {
-                throw new \Exception(
-                    "Insufficient stock. Available: " .
-                        $product["quantity_available"],
-                );
+                throw new \Exception("Insufficient stock");
             }
 
             // Calculate prices

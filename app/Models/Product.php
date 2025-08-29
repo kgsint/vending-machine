@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use App\Contracts\ProductRepositoryInterface;
 use PDO;
 use PDOException;
 
-class Product
+class Product implements ProductRepositoryInterface
 {
     private $db;
 
@@ -32,8 +33,8 @@ class Product
         int $offset = 0,
         string $orderBy = "created_at",
         string $sortDirection = "DESC",
-        bool $activeOnly = true,
-    ) {
+        bool $activeOnly = true
+    ): array {
         $activeCondition = $activeOnly ? "WHERE is_active = 1" : "";
         $query = "SELECT * FROM products $activeCondition ORDER BY $orderBy $sortDirection LIMIT :limit OFFSET :offset";
 

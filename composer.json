@@ -9,11 +9,21 @@
       "app/helper.php"
     ]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
   "authors": [
     {
       "name": "Kaung Sint Ko KO",
       "email": "kaungsintkoko99@gmail.com"
     }
   ],
-  "require": {}
+  "require": {
+    "firebase/php-jwt": "^6.11"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.5"
+  }
 }

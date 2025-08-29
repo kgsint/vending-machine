@@ -12,11 +12,23 @@ class Database
 
     private function __construct()
     {
-        $dbConfig = require_once CONFIG_PATH . "database.php";
+        // Use test config in testing environment
+        $configFile = ($_ENV['APP_ENV'] ?? 'production') === 'testing' 
+            ? CONFIG_PATH . "database_test.php" 
+            : CONFIG_PATH . "database.php";
+            
+        $dbConfig = require_once $configFile;
 
-        $dsn = "mysql:host={$dbConfig["host"]};dbname={$dbConfig["database"]}";
-        $username = $dbConfig["username"];
-        $password = $dbConfig["password"];
+        // Build DSN based on driver
+        if ($dbConfig['driver'] === 'sqlite') {
+            $dsn = "sqlite:" . $dbConfig['database'];
+            $username = null;
+            $password = null;
+        } else {
+            $dsn = "mysql:host={$dbConfig["host"]};dbname={$dbConfig["database"]}";
+            $username = $dbConfig["username"];
+            $password = $dbConfig["password"];
+        }
 
         try {
             $this->db = new PDO($dsn, $username, $password, [
@@ -40,5 +52,11 @@ class Database
     public function getConnection()
     {
         return $this->db;
+    }
+
+    // Reset the singleton instance for testing
+    public static function resetInstance()
+    {
+        self::$instance = null;
     }
 }
