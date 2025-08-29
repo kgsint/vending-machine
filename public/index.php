@@ -2,6 +2,7 @@
 
 use App\Controllers\HomeController;
 use App\Controllers\AuthController;
+use App\Controllers\ProductsController;
 use Core\Router;
 use App\Exceptions\ValidationException;
 use Core\Session;
@@ -23,8 +24,14 @@ $router->get("/", [HomeController::class, "index"]);
 $router->get("/home", [HomeController::class, "index"]);
 $router->get("/login", [AuthController::class, "loginView"]);
 $router->post("/login", [AuthController::class, "login"]);
-
 $router->post("/logout", [AuthController::class, "logout"]);
+
+// Product routes
+$router->get("/products", [ProductsController::class, "index"]);
+$router->get("/products/show", [ProductsController::class, "show"]);
+$router->get("/products/purchase", [ProductsController::class, "purchase"]);
+$router->post("/products/process-purchase", [ProductsController::class, "processPurchase"]);
+$router->get("/transactions/history", [ProductsController::class, "transactionHistory"]);
 
 $uri = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH); // only uri without query strings or parameters
 $requestMethod = isset($_POST["_method"])
