@@ -1,5 +1,7 @@
 <?php
-$title = 'Transaction Management - Admin';
+$title = "Transaction Management - Admin";
+// Include pagination component
+require_once VIEW_PATH . "../views/components/pagination.php";
 ob_start();
 ?>
 
@@ -53,45 +55,79 @@ ob_start();
                         <?php foreach ($transactions as $transaction): ?>
                             <tr>
                                 <td>
-                                    <span class="fw-bold text-primary">#<?= $transaction['id'] ?></span>
+                                    <span class="fw-bold text-primary">#<?= $transaction[
+                                        "id"
+                                    ] ?></span>
                                 </td>
                                 <td>
                                     <div>
-                                        <strong><?= htmlspecialchars($transaction['username']) ?></strong>
-                                        <div class="small text-muted"><?= htmlspecialchars($transaction['email']) ?></div>
+                                        <strong><?= htmlspecialchars(
+                                            $transaction["username"],
+                                        ) ?></strong>
+                                        <div class="small text-muted"><?= htmlspecialchars(
+                                            $transaction["email"],
+                                        ) ?></div>
                                     </div>
                                 </td>
                                 <td>
-                                    <strong><?= htmlspecialchars($transaction['product_name']) ?></strong>
+                                    <strong><?= htmlspecialchars(
+                                        $transaction["product_name"],
+                                    ) ?></strong>
                                 </td>
                                 <td>
-                                    <span class="badge bg-light text-dark"><?= $transaction['quantity'] ?>x</span>
+                                    <span class="badge bg-light text-dark"><?= $transaction[
+                                        "quantity"
+                                    ] ?>x</span>
                                 </td>
                                 <td>
-                                    $<?= number_format($transaction['unit_price'], 2) ?>
+                                    $<?= number_format(
+                                        $transaction["unit_price"],
+                                        2,
+                                    ) ?>
                                 </td>
                                 <td>
-                                    <span class="fw-bold text-success">$<?= number_format($transaction['total_price'], 2) ?></span>
+                                    <span class="fw-bold text-success">$<?= number_format(
+                                        $transaction["total_price"],
+                                        2,
+                                    ) ?></span>
                                 </td>
                                 <td>
-                                    <?php
-                                    $statusColor = match($transaction['status']) {
-                                        'completed' => 'success',
-                                        'pending' => 'warning',
-                                        'cancelled' => 'danger',
-                                        default => 'secondary'
-                                    };
-                                    ?>
-                                    <span class="badge bg-<?= $statusColor ?>"><?= ucfirst($transaction['status']) ?></span>
+                                    <?php $statusColor = match (
+                                        $transaction["status"]
+                                    ) {
+                                        "completed" => "success",
+                                        "pending" => "warning",
+                                        "cancelled" => "danger",
+                                        default => "secondary",
+                                    }; ?>
+                                    <span class="badge bg-<?= $statusColor ?>"><?= ucfirst(
+    $transaction["status"],
+) ?></span>
                                 </td>
                                 <td>
                                     <div>
-                                        <?= date('M j, Y', strtotime($transaction['transaction_date'])) ?>
-                                        <div class="small text-muted"><?= date('H:i:s', strtotime($transaction['transaction_date'])) ?></div>
+                                        <?= date(
+                                            "M j, Y",
+                                            strtotime(
+                                                $transaction[
+                                                    "transaction_date"
+                                                ],
+                                            ),
+                                        ) ?>
+                                        <div class="small text-muted"><?= date(
+                                            "H:i:s",
+                                            strtotime(
+                                                $transaction[
+                                                    "transaction_date"
+                                                ],
+                                            ),
+                                        ) ?></div>
                                     </div>
                                 </td>
                                 <td>
-                                    <a href="/admin/transactions/show?id=<?= $transaction['id'] ?>" 
+                                    <a href="/admin/transactions/show?id=<?= $transaction[
+                                        "id"
+                                    ] ?>"
                                        class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-eye"></i>
                                     </a>
@@ -102,35 +138,25 @@ ob_start();
                 </table>
             </div>
 
-            <!-- Pagination -->
-            <?php if ($totalPages > 1): ?>
-                <nav class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        <?php if ($currentPage > 1): ?>
-                            <li class="page-item">
-                                <a class="page-link" href="?page=<?= $currentPage - 1 ?>">Previous</a>
-                            </li>
-                        <?php endif; ?>
-
-                        <?php for ($i = max(1, $currentPage - 2); $i <= min($totalPages, $currentPage + 2); $i++): ?>
-                            <li class="page-item <?= $i === $currentPage ? 'active' : '' ?>">
-                                <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
-                            </li>
-                        <?php endfor; ?>
-
-                        <?php if ($currentPage < $totalPages): ?>
-                            <li class="page-item">
-                                <a class="page-link" href="?page=<?= $currentPage + 1 ?>">Next</a>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                </nav>
-            <?php endif; ?>
+            <!-- Enhanced Pagination -->
+            <?php
+            $perPage = $_GET["per_page"] ?? 10;
+            echo renderAdvancedPagination(
+                $currentPage,
+                $totalPages,
+                $totalTransactions,
+                $perPage,
+                [],
+                "/admin/transactions",
+            );
+            ?>
         <?php endif; ?>
     </div>
 </div>
 
 <?php
 $content = ob_get_clean();
-include VIEW_PATH . 'admin/layout.php';
+include VIEW_PATH . "admin/layout.php";
+
+
 ?>

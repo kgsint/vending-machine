@@ -1,5 +1,7 @@
 <?php
-$title = 'User Management - Admin';
+$title = "User Management - Admin";
+// Include pagination component
+require_once VIEW_PATH . "../views/components/pagination.php";
 ob_start();
 ?>
 
@@ -30,7 +32,9 @@ ob_start();
     <div class="col-md-6">
         <div class="card bg-light">
             <div class="card-body text-center">
-                <h5 class="text-warning"><?= count(array_filter($users, fn($u) => $u['role'] === 'admin')) ?></h5>
+                <h5 class="text-warning"><?= count(
+                    array_filter($users, fn($u) => $u["role"] === "admin"),
+                ) ?></h5>
                 <p class="mb-0 small text-muted">Admin Users</p>
             </div>
         </div>
@@ -73,21 +77,26 @@ ob_start();
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="me-3 bg-light rounded-circle d-flex align-items-center justify-content-center" 
+                                        <div class="me-3 bg-light rounded-circle d-flex align-items-center justify-content-center"
                                              style="width: 40px; height: 40px;">
                                             <i class="fas fa-user text-muted"></i>
                                         </div>
                                         <div>
-                                            <strong><?= htmlspecialchars($user['username']) ?></strong>
-                                            <?php if ($user['id'] == $_SESSION['user']['id']): ?>
+                                            <strong><?= htmlspecialchars(
+                                                $user["username"],
+                                            ) ?></strong>
+                                            <?php if (
+                                                $user["id"] ==
+                                                $_SESSION["user"]["id"]
+                                            ): ?>
                                                 <span class="badge bg-info ms-2">You</span>
                                             <?php endif; ?>
                                         </div>
                                     </div>
                                 </td>
-                                <td><?= htmlspecialchars($user['email']) ?></td>
+                                <td><?= htmlspecialchars($user["email"]) ?></td>
                                 <td>
-                                    <?php if ($user['role'] === 'admin'): ?>
+                                    <?php if ($user["role"] === "admin"): ?>
                                         <span class="badge bg-warning">
                                             <i class="fas fa-crown me-1"></i>
                                             Admin
@@ -100,20 +109,32 @@ ob_start();
                                     <?php endif; ?>
                                 </td>
                                 <td class="text-muted small">
-                                    <?= date('M j, Y', strtotime($user['created_at'])) ?>
+                                    <?= date(
+                                        "M j, Y",
+                                        strtotime($user["created_at"]),
+                                    ) ?>
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="/admin/users/edit?id=<?= $user['id'] ?>" 
+                                        <a href="/admin/users/edit?id=<?= $user[
+                                            "id"
+                                        ] ?>"
                                            class="btn btn-sm btn-outline-primary">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <?php if ($user['id'] != $_SESSION['user']['id']): ?>
+                                        <?php if (
+                                            $user["id"] !=
+                                            $_SESSION["user"]["id"]
+                                        ): ?>
                                             <form method="POST" action="/admin/users/delete" class="d-inline">
-                                                <input type="hidden" name="id" value="<?= $user['id'] ?>">
-                                                <button type="submit" 
-                                                        class="btn btn-sm btn-outline-danger" 
-                                                        data-confirm="Are you sure you want to delete user '<?= htmlspecialchars($user['username']) ?>'?">
+                                                <input type="hidden" name="id" value="<?= $user[
+                                                    "id"
+                                                ] ?>">
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-outline-danger"
+                                                        data-confirm="Are you sure you want to delete user '<?= htmlspecialchars(
+                                                            $user["username"],
+                                                        ) ?>'?">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </form>
@@ -130,35 +151,24 @@ ob_start();
                 </table>
             </div>
 
-            <!-- Pagination -->
-            <?php if ($totalPages > 1): ?>
-                <nav class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        <?php if ($currentPage > 1): ?>
-                            <li class="page-item">
-                                <a class="page-link" href="?page=<?= $currentPage - 1 ?>">Previous</a>
-                            </li>
-                        <?php endif; ?>
-
-                        <?php for ($i = max(1, $currentPage - 2); $i <= min($totalPages, $currentPage + 2); $i++): ?>
-                            <li class="page-item <?= $i === $currentPage ? 'active' : '' ?>">
-                                <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
-                            </li>
-                        <?php endfor; ?>
-
-                        <?php if ($currentPage < $totalPages): ?>
-                            <li class="page-item">
-                                <a class="page-link" href="?page=<?= $currentPage + 1 ?>">Next</a>
-                            </li>
-                        <?php endif; ?>
-                    </ul>
-                </nav>
-            <?php endif; ?>
+            <!-- Enhanced Pagination -->
+            <?php
+            $perPage = $_GET["per_page"] ?? 10;
+            echo renderAdvancedPagination(
+                $currentPage,
+                $totalPages,
+                $totalUsers,
+                $perPage,
+                [],
+                "/admin/users",
+            );
+            ?>
         <?php endif; ?>
     </div>
 </div>
 
 <?php
 $content = ob_get_clean();
-include VIEW_PATH . 'admin/layout.php';
+include VIEW_PATH . "admin/layout.php";
+
 ?>

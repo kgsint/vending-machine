@@ -166,25 +166,6 @@
                     </div>
                 <?php endif; ?>
 
-                <?php if (
-                    isset($_SESSION["_flash"]["errors"]) &&
-                    !empty($_SESSION["_flash"]["errors"])
-                ): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        <strong>Please fix the following errors:</strong>
-                        <ul class="mb-0 mt-2">
-                            <?php foreach (
-                                $_SESSION["_flash"]["errors"]
-                                as $error
-                            ): ?>
-                                <li><?= htmlspecialchars($error) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <?php endif; ?>
-
                 <!-- Main Content Area -->
                 <?= $content ?>
             </main>

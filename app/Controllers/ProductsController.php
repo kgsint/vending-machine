@@ -27,8 +27,16 @@ class ProductsController
 
     public function index()
     {
-        $page = (int) ($_GET["page"] ?? 1);
-        $limit = 12; // Products per page
+        $page = (int) ($_GET['page'] ?? 1);
+        $perPage = (int) ($_GET['per_page'] ?? 12);
+        
+        // Validate per-page options
+        $allowedPerPage = [6, 12, 24, 48];
+        if (!in_array($perPage, $allowedPerPage)) {
+            $perPage = 12;
+        }
+        
+        $limit = $perPage;
         $offset = ($page - 1) * $limit;
 
         $sortBy = $_GET["sort"] ?? "name";
@@ -76,6 +84,7 @@ class ProductsController
                 "order" => $order,
                 "search" => $search,
                 "totalProducts" => $totalProducts,
+                "perPage" => $perPage,
             ]);
         } catch (\Exception $e) {
             Session::flashError(

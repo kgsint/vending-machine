@@ -1,5 +1,7 @@
 <?php
 $title = 'Products - Vending Machine';
+// Include pagination component
+require_once VIEW_PATH . '../views/components/pagination.php';
 ob_start();
 ?>
 

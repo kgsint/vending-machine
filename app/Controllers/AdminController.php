@@ -76,7 +76,15 @@ class AdminController
         $this->requireAdmin();
 
         $page = (int) ($_GET["page"] ?? 1);
-        $limit = 20;
+        $perPage = (int) ($_GET["per_page"] ?? 10);
+
+        // Validate per-page options
+        $allowedPerPage = [10, 20, 50, 100];
+        if (!in_array($perPage, $allowedPerPage)) {
+            $perPage = 20;
+        }
+
+        $limit = $perPage;
         $offset = ($page - 1) * $limit;
 
         try {
@@ -95,6 +103,7 @@ class AdminController
                 "currentPage" => $page,
                 "totalPages" => $totalPages,
                 "totalProducts" => $totalProducts,
+                "perPage" => $perPage,
             ]);
         } catch (\Exception $e) {
             Session::flashError(
@@ -236,7 +245,7 @@ class AdminController
         $this->requireAdmin();
 
         $page = (int) ($_GET["page"] ?? 1);
-        $limit = 50;
+        $limit = 10;
         $offset = ($page - 1) * $limit;
 
         try {
@@ -293,7 +302,7 @@ class AdminController
         $this->requireAdmin();
 
         $page = (int) ($_GET["page"] ?? 1);
-        $limit = 50;
+        $limit = 10;
         $offset = ($page - 1) * $limit;
 
         try {
