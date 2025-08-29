@@ -63,9 +63,11 @@
                                     Admin
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="/admin/products">Manage Products</a></li>
-                                    <li><a class="dropdown-item" href="/admin/transactions">View Transactions</a></li>
-                                    <li><a class="dropdown-item" href="/admin/users">Manage Users</a></li>
+                                    <li><a class="dropdown-item" href="/admin/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin/products"><i class="fas fa-box me-2"></i>Manage Products</a></li>
+                                    <li><a class="dropdown-item" href="/admin/transactions"><i class="fas fa-chart-line me-2"></i>View Transactions</a></li>
+                                    <li><a class="dropdown-item" href="/admin/users"><i class="fas fa-users me-2"></i>Manage Users</a></li>
                                 </ul>
                             </li>
                         <?php endif; ?>
