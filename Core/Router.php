@@ -75,7 +75,8 @@ class Router
 
                     $class = new $class();
 
-                    return call_user_func([$class, $action], []);
+                    call_user_func([$class, $action], []);
+                    return true;
                 }
             }
         }

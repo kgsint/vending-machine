@@ -3,6 +3,8 @@
 use App\Controllers\HomeController;
 use App\Controllers\AuthController;
 use Core\Router;
+use App\Exceptions\ValidationException;
+use Core\Session;
 
 session_start();
 
@@ -20,6 +22,8 @@ $router = new Router();
 $router->get("/", [HomeController::class, "index"]);
 $router->get("/home", [HomeController::class, "index"]);
 $router->get("/login", [AuthController::class, "loginView"]);
+$router->post("/login", [AuthController::class, "login"]);
+
 $router->post("/logout", [AuthController::class, "logout"]);
 
 $uri = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH); // only uri without query strings or parameters
@@ -27,5 +31,15 @@ $requestMethod = isset($_POST["_method"])
     ? strtoupper($_POST["_method"])
     : $_SERVER["REQUEST_METHOD"];
 
+// Age flash messages at the start of each request
+Session::ageFlashMessages();
+
 // resolve routes from request
-$router->resolve($uri, $requestMethod);
+try {
+    $router->resolve($uri, $requestMethod);
+} catch (ValidationException $e) {
+    Session::flashErrors($e->errors);
+    Session::flashOldValues($e->old);
+
+    redirectBack();
+}

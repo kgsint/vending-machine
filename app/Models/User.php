@@ -7,7 +7,6 @@ use DateTime;
 class User
 {
     private $db;
-    private $table = "users";
 
     public int $id;
     public string $username;
@@ -23,7 +22,7 @@ class User
 
     public function all($order_by = "created_at", $sort_by = "DESC")
     {
-        $query = "SELECT * FROM ${$this->table} ORDER BY ${$order_by} ${$sort_by}";
+        $query = "SELECT * FROM users ORDER BY $order_by $sort_by";
 
         $stmt = $this->db->prepare($query);
         $stmt->execute();
